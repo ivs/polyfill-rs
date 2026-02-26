@@ -3,6 +3,7 @@
 //! This module provides a production-ready client for interacting with
 //! Polymarket, optimized for high-frequency trading environments.
 
+use crate::SigType;
 use crate::auth::{create_l1_headers, create_l2_headers};
 use crate::errors::{PolyfillError, Result};
 use crate::http_config::{
@@ -203,7 +204,7 @@ impl ClobClient {
             .parse::<PrivateKeySigner>()
             .expect("Invalid private key");
 
-        let order_builder = crate::orders::OrderBuilder::new(signer.clone(), None, None);
+        let order_builder = crate::orders::OrderBuilder::new(signer.clone(), Some(SigType::PolyGnosisSafe), None);
 
         let http_client = create_optimized_client().unwrap_or_else(|_| {
             reqwest::ClientBuilder::new()
